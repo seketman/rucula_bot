@@ -1,2 +1,2 @@
-# rucula_bot
+# Rúcula Bot
 Dolar blue WhatsApp bot
