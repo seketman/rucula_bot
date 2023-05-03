@@ -21,7 +21,7 @@ def suscriber_should_be_notified(notification_gap, old_value, new_value):
     return not(old_value - notification_gap < new_value < old_value + notification_gap)
 
 def notify_suscriber(driver, suscriber_id, old_value, new_value):
-    send_message(driver, suscriber_id, 'El blue %s a $%d' % ('subió' if old_value < new_value else 'bajó', new_value))
+    return send_message(driver, suscriber_id, 'El blue %s a $%d' % ('subió' if old_value < new_value else 'bajó', new_value))
 
 # Inicializar el navegador web
 with webdriver.Chrome(service=Service(ChromeDriverManager().install())) as driver:
