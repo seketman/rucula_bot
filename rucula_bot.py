@@ -20,8 +20,9 @@ admin_accounts = [
 def suscriber_should_be_notified(notification_gap, old_value, new_value):
     return not(old_value - notification_gap < new_value < old_value + notification_gap)
 
-def notify_suscriber(driver, suscriber_id, old_value, new_value):
-    return send_message(driver, suscriber_id, 'El blue %s a $%d' % ('subió' if old_value < new_value else 'bajó', new_value))
+def notify_suscriber(driver, suscriber_id, old_sell_value, buy_value, new_sell_value):
+    variation = 'subió' if old_sell_value < new_sell_value else 'bajó'
+    return send_message(driver, suscriber_id, 'El blue %s - Compra $%d, Venta $%d' % (variation, buy_value, new_sell_value))
 
 # Inicializar el navegador web
 with webdriver.Chrome(service=Service(ChromeDriverManager().install())) as driver:
@@ -45,12 +46,13 @@ with webdriver.Chrome(service=Service(ChromeDriverManager().install())) as drive
         data = response.json()
         print("%s - Compra: %s - Venta: %s" % (data['fecha'], data['compra'], data['venta']))
 
-        new_value = int(data['venta'].split(',')[0])
+        new_sell_value = int(data['venta'].split(',')[0])
+        buy_value = int(data['compra'].split(',')[0])
         for suscriber in get_suscribers(connection):
             if suscriber['last_notified_value'] is None:
                 # First dummy notification to initialize the value
-                update_suscriber_notification(connection, suscriber['id'], new_value)
+                update_suscriber_notification(connection, suscriber['id'], new_sell_value)
             
-            elif suscriber_should_be_notified(suscriber['gap'], suscriber['last_notified_value'], new_value):
-                if notify_suscriber(driver, suscriber['id'], suscriber['last_notified_value'], new_value):
-                    update_suscriber_notification(connection, suscriber['id'], new_value)
+            elif suscriber_should_be_notified(suscriber['gap'], suscriber['last_notified_value'], new_sell_value):
+                if notify_suscriber(driver, suscriber['id'], suscriber['last_notified_value'], buy_value, new_sell_value):
+                    update_suscriber_notification(connection, suscriber['id'], new_sell_value)
