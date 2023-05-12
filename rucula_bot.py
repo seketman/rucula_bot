@@ -1,3 +1,10 @@
+# Setup
+# 1. Install Python 3.11.3
+# 2. Install pip
+# 3. Install Selenium: pip3 install selenium
+# 4. Install webdriver-manager: pip3 install webdriver-manager
+# 5. Install requests: pip3 install requests
+#
 import time
 
 from selenium import webdriver

@@ -2,7 +2,7 @@ import os
 import sqlite3
 import time
 
-database_file = 'data\\rucula_data.db'
+database_file = 'data/rucula_data.db'
 
 def get_connection():
     file_already_exist = os.path.isfile(database_file)
